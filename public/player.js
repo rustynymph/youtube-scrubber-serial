@@ -1,6 +1,27 @@
 var player;
 var socket = io();
 
+select = document.createElement("select");
+refresh = document.createElement("button");
+refresh.value = "refresh";
+document.body.appendChild(select);
+document.body.appendChild(refresh);
+// add form to change video
+
+refresh.onclick = function(){
+    for (i=0;i<select.length;  i++) {
+        select.remove(i);
+     }
+    socket.emit("getportinfo", {});
+};
+select.onchange = function(){
+    socket.emit("portselected", {'name':this.value});
+};
+
+socket.on('port', function(msg){
+  select.add(new Option(msg["name"].toString(),msg["name"].toString()) );
+});
+
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-placeholder', {
         width: 600,
@@ -14,7 +35,6 @@ function onYouTubeIframeAPIReady() {
             onReady: initialize
         }
     });
-
 }
 
 function initialize(){
@@ -33,42 +53,47 @@ function initialize(){
         updateProgressBar();
     }, 1000)
 
-    socket.on('osc', function(msg){
-        var osc_address = msg["address"];
-        var osc_values = msg["payload"];
-        console.log(osc_address, osc_values);
-        switch(osc_address) {
-            case "/play":
+    socket.on('video', function(msg){
+        var key = msg["key"];
+        key = key.replace(/\n/g,'').replace(/\s/g,'');
+        var value = msg["value"];
+        console.log(key, value);
+        switch(key) {
+            case "play":
                 player.playVideo();
                 break;
-            case "/pause":
+            case "pause":
                 player.pauseVideo();
                 break;                
-            case "/stop":
+            case "stop":
                 player.stopVideo();
                 break;
-            case "/seek":
-                player.seekTo(parseFloat(osc_values[0]));
+            case "seek":
+                player.seekTo(parseFloat(value[0]));
                 break;
-            case "/rewind":
+            case "rewind":
                 var time = player.getCurrentTime();
-                player.seekTo(time - parseFloat(osc_values[0]));
+                player.seekTo(time - parseFloat(value[0]));
                 break;
-            case "/fastforward":
+            case "fastforward":
                 var time = player.getCurrentTime();
-                player.seekTo(time + parseFloat(osc_values[0]));
+                player.seekTo(time + parseFloat(value[0]));
                 break;                
-            case "/speed":
-                player.setPlaybackRate(parseFloat(osc_values[0]));
+            case "speed":
+                if (value[0] > 20){
+                    player.setPlaybackRate(parseFloat(value[0])/100);
+                } else {
+                    player.setPlaybackRate(parseFloat(value[0]));
+                }
                 break;
-            case "/id":
-                player.cueVideoById(osc_values[0]);
+            case "id":
+                player.cueVideoById(value[0]);
                 break;
-            case "/volume":
-                player.setVolume(osc_values[0]);
+            case "volume":
+                player.setVolume(value[0]);
                 break;
-            case "/mute":
-                switch(osc_values[0]) {
+            case "mute":
+                switch(value[0]) {
                     case 1:
                     case "1":
                         player.mute();
@@ -77,10 +102,10 @@ function initialize(){
                         player.unMute();
                 }
                 break;
-            case "/next":
+            case "next":
                 player.nextVideo();
                 break;
-            case "/previous":
+            case "previous":
                 player.previousVideo();
                 break;
             default:
