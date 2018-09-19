@@ -1,4 +1,5 @@
-node .
-localhost:4243/player.html
+npm install  
+node .  
+localhost:4243/player.html  
 =======
 # youtube-scrubber-serial
