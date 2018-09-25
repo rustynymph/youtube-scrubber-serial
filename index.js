@@ -1,17 +1,18 @@
-var OSC_RECIEVE_PORT = 6448
-var WS_PORT=4243
-//var osc = require('node-osc');
+var WS_PORT=8000
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 var SerialPort = require('serialport');
 var Readline = require('@serialport/parser-readline')
 var util = require("util"), repl = require("repl");
+
 var open_sockets = [];
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/public/player.html');
 });
 
 app.use(express.static('public'));
