@@ -80,11 +80,10 @@ function initialize(){
                 player.seekTo(time + parseFloat(value[0]));
                 break;                
             case "speed":
-                if (value[0] > 20){
-                    player.setPlaybackRate(parseFloat(value[0])/100);
-                } else {
-                    player.setPlaybackRate(parseFloat(value[0]));
-                }
+                player.setPlaybackRate(parseFloat(value[0]));
+                break;
+            case "scaledspeed":
+                player.setPlaybackRate(parseFloat(value[0])/100);
                 break;
             case "id":
                 player.cueVideoById(value[0]);
