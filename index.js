@@ -67,14 +67,18 @@ http.listen(WS_PORT, function(){
 });
 
 function parseData(data){
-  console.log(data);
+  //console.log(data);
   var message = {};
-  if (data.includes(":")){
-    // split string
+  if (data.includes(":")) {
     var params = data.split(":");
-    message = {'key': params[0], 'value': [params[1]]};
-  } else {
-    message = {'key': data.toString(), 'value': 0};
+    var key = params[0].replace(/\n/g,'').replace(/\s/g,'');
+    var value = params[1].replace(/\n/g,'').replace(/\s/g,'');
+    message = {'key': key, 'value': [value]};
+    console.log(message);
+    return message;
   }
+  var key = data.replace(/\n/g,'').replace(/\s/g,'');
+  message = {'key': key.toString(), 'value': ["0"]};
+  console.log(message);
   return message;
 }

@@ -6,7 +6,6 @@ refresh = document.createElement("button");
 refresh.value = "refresh";
 document.body.appendChild(select);
 document.body.appendChild(refresh);
-// add form to change video
 
 refresh.onclick = function(){
     for (i=0;i<select.length;  i++) {
@@ -24,12 +23,12 @@ socket.on('port', function(msg){
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-placeholder', {
-        width: 600,
-        height: 400,
-        videoId: 'mZxxhxjgnC0',
+        width: window.innerWidth/2,
+        height: window.innerHeight/2,
+        videoId: '9p_Si21ig7c',
         playerVars: {
             color: 'white',
-            playlist: 'GpBFOJ3R0M4,cWKi6F5jMjo'
+            playlist: ''
         },
         events: {
             onReady: initialize
@@ -39,7 +38,6 @@ function onYouTubeIframeAPIReady() {
 
 function initialize(){
 
-    // Update the controls on load
     updateTimerDisplay();
     updateProgressBar();
 
@@ -55,11 +53,11 @@ function initialize(){
 
     socket.on('video', function(msg){
         var key = msg["key"];
-        key = key.replace(/\n/g,'').replace(/\s/g,'');
         var value = msg["value"];
-        console.log(key, value);
+        console.log("key: " + key + " value: " + value);
         switch(key) {
             case "play":
+                console.log("play testttt");
                 player.playVideo();
                 break;
             case "pause":
@@ -80,12 +78,11 @@ function initialize(){
                 player.seekTo(time + parseFloat(value[0]));
                 break;                
             case "speed":
-                if (value[0] > 20){
-                    player.setPlaybackRate(parseFloat(value[0])/100);
-                } else {
-                    player.setPlaybackRate(parseFloat(value[0]));
-                }
-                break;
+                player.setPlaybackRate(parseFloat(value[0]));   
+                break; 
+            case "scaledspeed":
+                player.setPlaybackRate(parseFloat(value[0])/100);   
+                break;                                   
             case "id":
                 player.cueVideoById(value[0]);
                 break;
