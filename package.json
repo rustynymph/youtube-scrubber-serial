@@ -5,6 +5,7 @@
   "dependencies": {
     "express": "^4.10.2",
     "node-osc": "^2.0.4",
+    "serialport": "^7.0.2",
     "socket.io": "^1.7.2"
   }
 }
