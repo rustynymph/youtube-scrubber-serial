@@ -29,9 +29,7 @@ socket.on('port', function(msg){
 });
 
 function onYTready() {
-    console.log("testing yo");
-    testbutton = document.createElement("button");
-    document.body.appendChild(testbutton);
+    console.log("YouTube API ready");
     player = new YT.Player('video-placeholder', {
         width: window.innerWidth/2,
         height: window.innerHeight/2,
@@ -47,19 +45,7 @@ function onYTready() {
 }
 
 function onYouTubeIframeAPIReady() {
-    console.log("testing bitch");
-    /* player = new YT.Player('video-placeholder', {
-        width: window.innerWidth/2,
-        height: window.innerHeight/2,
-        videoId: '9p_Si21ig7c',
-        playerVars: {
-            color: 'white',
-            playlist: ''
-        },
-        events: {
-            onReady: initialize
-        }
-    }); */
+    // doesn't work, use onYTready instead
 }
 
 function initialize(){
