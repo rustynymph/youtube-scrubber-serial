@@ -32,10 +32,6 @@ function onYTready() {
     console.log("testing yo");
     testbutton = document.createElement("button");
     document.body.appendChild(testbutton);
-}
-
-function onYouTubeIframeAPIReady() {
-    console.log("testing bitch");
     player = new YT.Player('video-placeholder', {
         width: window.innerWidth/2,
         height: window.innerHeight/2,
@@ -48,6 +44,22 @@ function onYouTubeIframeAPIReady() {
             onReady: initialize
         }
     });
+}
+
+function onYouTubeIframeAPIReady() {
+    console.log("testing bitch");
+    /* player = new YT.Player('video-placeholder', {
+        width: window.innerWidth/2,
+        height: window.innerHeight/2,
+        videoId: '9p_Si21ig7c',
+        playerVars: {
+            color: 'white',
+            playlist: ''
+        },
+        events: {
+            onReady: initialize
+        }
+    }); */
 }
 
 function initialize(){
