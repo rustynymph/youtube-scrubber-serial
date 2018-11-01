@@ -1,6 +1,13 @@
 var player;
 var socket = io();
 
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); 
+window.onYouTubeIframeAPIReady = this.onYTready;
+window.onYouTubeIframeAPIReady = this.onYTready.bind(this);
+
 select = document.createElement("select");
 refresh = document.createElement("button");
 refresh.value = "refresh";
@@ -20,6 +27,8 @@ select.onchange = function(){
 socket.on('port', function(msg){
   select.add(new Option(msg["name"].toString(),msg["name"].toString()) );
 });
+
+function onYTready() {console.log("testing yo");}
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-placeholder', {
