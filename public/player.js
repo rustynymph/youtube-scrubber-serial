@@ -28,7 +28,11 @@ socket.on('port', function(msg){
   select.add(new Option(msg["name"].toString(),msg["name"].toString()) );
 });
 
-function onYTready() {console.log("testing yo");}
+function onYTready() {
+    console.log("testing yo");
+    testbutton = document.createElement("button");
+    document.body.appendChild(testbutton);
+}
 
 function onYouTubeIframeAPIReady() {
     console.log("testing bitch");
