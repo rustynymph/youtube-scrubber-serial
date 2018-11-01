@@ -31,6 +31,7 @@ socket.on('port', function(msg){
 function onYTready() {console.log("testing yo");}
 
 function onYouTubeIframeAPIReady() {
+    console.log("testing bitch");
     player = new YT.Player('video-placeholder', {
         width: window.innerWidth/2,
         height: window.innerHeight/2,
