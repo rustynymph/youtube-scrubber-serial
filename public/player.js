@@ -8,26 +8,6 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 window.onYouTubeIframeAPIReady = this.onYTready;
 window.onYouTubeIframeAPIReady = this.onYTready.bind(this);
 
-select = document.createElement("select");
-refresh = document.createElement("button");
-refresh.value = "refresh";
-document.body.appendChild(select);
-document.body.appendChild(refresh);
-
-refresh.onclick = function(){
-    for (i=0;i<select.length;  i++) {
-        select.remove(i);
-     }
-    socket.emit("getportinfo", {});
-};
-select.onchange = function(){
-    socket.emit("portselected", {'name':this.value});
-};
-
-socket.on('port', function(msg){
-  select.add(new Option(msg["name"].toString(),msg["name"].toString()) );
-});
-
 function onYTready() {
     console.log("YouTube API ready");
     player = new YT.Player('video-placeholder', {
