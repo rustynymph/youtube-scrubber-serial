@@ -11,6 +11,8 @@ var util = require("util"), repl = require("repl");
 
 var open_sockets = [];
 
+var myPort = null;
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/player.html');
 });
@@ -23,29 +25,50 @@ io.on('connection', function(socket){
 
   SerialPort.list(function (err, ports) { 
     ports.forEach(function(port) {
-      console.log("Device");
-      console.log("======");
       var name = port.comName;
       var pnpId = port.pnpId;
       var manufacturer = port.manufacturer;
-      console.log(name);
-      console.log(pnpId);
-      console.log(manufacturer);
+      //console.log("Device");
+      //console.log("======");      
+      //console.log(name);
+      //console.log(pnpId);
+      //console.log(manufacturer);
 
       if(manufacturer == 'ARM' || name.includes("ACM") || name.includes("usbmodem")){
-        var port = new SerialPort(name, {
-          baudRate: 115200,
-          encoding: 'utf8'
-        });
-        
-        port.on('open', function() {
-              console.log("port opened: " + name);
-              const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
-              parser.on('data', function(data){
-                var message = parseData(data);
-                socket.emit("video", message);
-              });       
-          });
+          if (myPort && myPort.isOpen) { // port is already opened and running
+            console.log("Port opened already");
+
+            const parser = myPort.pipe(new Readline({ delimiter: '\r\n' })) // update which socket data is emitted to
+                  parser.on('data', function(data){
+                    var message = parseData(data);
+                    socket.emit("video", message);
+                  });
+          }
+          else { 
+            /* */
+            var port = new SerialPort(name, {
+              baudRate: 115200,
+              encoding: 'utf8'
+            });
+          
+            port.on('open', function() {
+                  myPort = port;
+                  console.log("port opened: " + name);
+                  const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
+                  parser.on('data', function(data){
+                    var message = parseData(data);
+                    socket.emit("video", message);
+                  });       
+            });
+
+            port.on('close', function (err) {
+              myPort = null;
+              console.log('port closed');  
+            });
+            /* */
+          } 
+
+
       }
 
     });
